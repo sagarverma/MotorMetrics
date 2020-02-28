@@ -41,6 +41,7 @@ def stead_state_error(reference, simulated):
 
 def overshoot(reference, simulated):
     #value of simulated at ramp overshoot
+    #negative if undershoot, positive if overshoot
     start, end = get_ramp(simulated)
     overshoot_idx = end + np.argmax(abs(reference[end:-1] - simulated[end:-1]))
     overshoot_perc = 100 * (simulated[overshoot_idx] - reference[overshoot_idx]) / (simulated.max() - simulated.min())
