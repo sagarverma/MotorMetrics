@@ -35,6 +35,8 @@ def following_error(reference, simulated):
 
 def stead_state_error(reference, simulated):
     #error between reference and simulated when simulated has stablised after overshoot
+    #consider last N points, they should be similar within a range and if they are take their average. 
+    #average - reference is steady state error
     pass
 
 def overshoot(reference, simulated):
