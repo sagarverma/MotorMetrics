@@ -35,7 +35,7 @@ def following_error(reference, simulated):
 
 def stead_state_error(reference, simulated):
     #error between reference and simulated when simulated has stablised after overshoot
-    #consider last N points, they should be similar within a range and if they are take their average. 
+    #consider last N points, they should be similar within a range and if they are take their average.
     #average - reference is steady state error
     pass
 
@@ -62,22 +62,3 @@ def setting_time(reference, simulated):
 def speed_drop_area(reference, simulated):
     #area of speed when drop occurs
     pass
-
-
-test = sio.loadmat('../mat_sim/test1.mat')
-print (test.keys())
-sim_speed = test['Speed']
-ref_speed = test['RefSpeed']
-sim_torque = test['Torque']
-ref_torque = test['RefLoad']
-time = test['t']
-
-#mirror is not the correct solution
-# ref_speed, sim_speed = mirror(ref_speed, sim_speed)
-# ref_torque, sim_torque = mirror(ref_torque, sim_torque)
-
-print ('2 % response time', response_time_2perc(ref_speed, sim_speed, time), 'seconds')
-print ('95 % response time', response_time_95perc(ref_speed, sim_speed, time), 'seconds')
-print ('following error', following_error(ref_speed, sim_speed))
-print ('overshoot', overshoot(ref_speed, sim_speed))
-print ('max torque acceleration', max_torque_acceleration(sim_torque))
