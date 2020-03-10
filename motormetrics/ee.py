@@ -9,9 +9,11 @@ def mirror(reference, simulated):
     return reference, simualted
 
 def get_ramp(simulated):
-    ramp_start = np.argmin(simulated == simulated.min())
-    ramp_end = np.argmax(simulated)
-    return ramp_start, ramp_end
+    #Use reference wihtout interpolation and also take in data ts
+    #Find all change points convert it back to the array location in
+    #simulation using the reference time 
+    changes = simulated[:-1] - simulated[1:]
+    return np.where(changes != 0)[0]
 
 def response_time_2perc(reference, simulated, time):
     #when is the simulated quantity 2% of the nominal reference quantity.
