@@ -1,0 +1,5 @@
+setup.py
+motormetrics.egg-info/PKG-INFO
+motormetrics.egg-info/SOURCES.txt
+motormetrics.egg-info/dependency_links.txt
+motormetrics.egg-info/top_level.txt

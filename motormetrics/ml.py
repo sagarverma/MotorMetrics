@@ -2,43 +2,52 @@ import math
 
 import numpy as np
 
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-
 from sklearn.metrics import r2_score, mean_absolute_error
 from sklearn.metrics import mean_squared_log_error
+
 
 def flatten_extra_dims(quant):
     return quant.flatten()
 
+
 def r2(y_true, y_pred):
+    assert y_true.shape == y_pred.shape
+
     y_true = flatten_extra_dims(y_true)
     y_pred = flatten_extra_dims(y_pred)
     return r2_score(y_true, y_pred)
 
 
 def rmsle(y_true, y_pred):
-    assert len(y_true) == len(y_pred)
+    assert y_true.shape == y_pred.shape
+    assert y_true.min() >= -1 and y_true.max() <= 1
+    assert y_pred.min() >= -1 and y_pred.max() <= 1
+
     y_true = flatten_extra_dims(y_true)
     y_pred = flatten_extra_dims(y_pred)
-    terms_to_sum = (np.log(y_pred + abs(y_pred) + 0.0001) - np.log(y_true + 1)) ** 2.0
+    terms_to_sum = (np.log(y_pred + 1) - np.log(y_true + 1))**2
     return (sum(terms_to_sum) * (1.0/len(y_true))) ** 0.5
 
-
 def rmse(y_true, y_pred):
+    assert y_true.shape == y_pred.shape
+
     y_true = flatten_extra_dims(y_true)
     y_pred = flatten_extra_dims(y_pred)
+
     return np.sqrt(((y_pred - y_true) ** 2).mean())
 
 
 def mae(y_true, y_pred):
+    assert y_true.shape == y_pred.shape
+
     y_true = flatten_extra_dims(y_true)
     y_pred = flatten_extra_dims(y_pred)
     return mean_absolute_error(y_true, y_pred)
 
 
 def smape(y_true, y_pred):
+    assert y_true.shape == y_pred.shape
+
     y_true = flatten_extra_dims(y_true)
     y_pred = flatten_extra_dims(y_pred)
     return 100.0/ len(y_true) * np.sum(2.0 * np.abs(y_pred - y_true) / \
@@ -47,10 +56,13 @@ def smape(y_true, y_pred):
 
 def sc(signal):
     signal = flatten_extra_dims(signal)
-    return np.sum(abs(signal[1:] - signal[:-1]))
+    return np.mean(abs(signal[1:] - signal[:-1]))
 
 
 def smape_vs_sc(y_true, y_pred, window):
+    assert window >= 1
+    assert y_true.shape == y_pred.shape
+
     y_true = flatten_extra_dims(y_true)
     y_pred = flatten_extra_dims(y_pred)
     smape_vs_sc_all_windows = []
@@ -65,8 +77,10 @@ def smape_vs_sc(y_true, y_pred, window):
 
 
 def sc_mse(y_pred, y_true):
-    sc_y_true = torch.sum(torch.abs(y_true[:,:,1:] - y_true[:,:,:-1]), dim=2)
-    mse = torch.mean((y_pred - y_true) ** 2.0, dim=2)
+    assert y_true.shape == y_pred.shape
+
+    sc_y_true = np.mean(np.abs(y_true[:,:,1:] - y_true[:,:,:-1]), axis=2)
+    mse = np.mean((y_pred - y_true) ** 2.0, axis=2)
     loss = sc_y_true * mse
-    loss = torch.mean(loss)
+    loss = np.mean(loss)
     return loss
