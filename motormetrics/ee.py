@@ -8,15 +8,19 @@ def mirror(reference, simulated):
         return abs(reference), abs(simulated)
     return reference, simualted
 
-def get_ramps(reference_data, reference_time):
+def get_ramps_from_raw_reference(reference_data, reference_time):
     #Use reference without interpolation and also take in data ts
     #Find all change points convert it back to the array location in
     #simulation using the reference time
     ramp_scopes = []
     for t in range(1, len(reference_data)-1):
         if reference_data[t] != reference_data[t+1]:
-            ramp_scopes.append([reference_time[t-1], reference_time[t+2]])
+            ramp_scopes.append(reference_time[t-1: t+3])
     return ramp_scopes
+
+def get_ramp_from_sim_reference(sim_time, ramp_scope):
+    sim_ramp_scope = [np.where(sim_time == x)[0][0] for x in ramp_scope]
+    return sim_ramp_scope
 
 def response_time_2perc(reference, simulated, time):
     #when is the simulated quantity 2% of the nominal reference quantity.
