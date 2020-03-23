@@ -24,9 +24,7 @@ def get_ramp_from_sim_reference(sim_time, ramp_scope):
 
 def response_time_2perc(reference, simulated, time):
     #when is the simulated quantity 2% of the nominal reference quantity.
-    start, end = get_ramp(simulated)
-    perc2_time = time[start + np.argmax(reference[start:end] >=\
-                        0.02 * simulated.max())] - time[start]
+    perc2_time = time[np.argmax(reference >= 0.02 * simulated.max())] - time[0]
     return perc2_time[0]
 
 def response_time_95perc(reference, simulated, time):

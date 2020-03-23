@@ -32,3 +32,26 @@ def test_get_ramp_from_sim_reference():
     assert sim_time[sim_ramp_scope[1]] == ramp_scopes[0][1]
     assert sim_time[sim_ramp_scope[2]] == ramp_scopes[0][2]
     assert sim_time[sim_ramp_scope[3]] == ramp_scopes[0][3]
+
+def test__response_time_2perc():
+    data = sio.loadmat('tests/test1.mat')
+
+    ref_speed_inp = data['RefSpeedInp'][0]
+    ref_speed_inp_t = data['RefSpeedInp_t'][0]
+
+    ref_speed = data['RefSpeed']
+    sim_speed = data['Speed']
+
+    sim_time = data['SimTime']
+
+    ramp_scopes = get_ramps_from_raw_reference(ref_speed_inp, ref_speed_inp_t)
+    sim_ramp_scope = get_ramp_from_sim_reference(sim_time, ramp_scopes[0])
+
+    ref_speed_scope = ref_speed[sim_ramp_scope[1]: sim_ramp_scope[-1]]
+    sim_speed_scope = sim_speed[sim_ramp_scope[1]: sim_ramp_scope[-1]]
+    sim_time_scope = sim_time[sim_ramp_scope[1]: sim_ramp_scope[-1]]
+
+    perc2_time = response_time_2perc(ref_speed_scope, sim_speed_scope, sim_time_scope)
+
+    print (perc2_time)
+    assert 1 == 2
