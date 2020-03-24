@@ -29,8 +29,7 @@ def response_time_2perc(reference, simulated, time):
 
 def response_time_95perc(reference, simulated, time):
     #when is the simulated quantity 95% of the nominal reference quantity
-    start, end = get_ramp(simulated)
-    perc2_time = time[start + np.argmax(reference[start:end] >= 0.95 * simulated.max())] - time[start]
+    perc2_time = time[np.argmax(reference >= 0.95 * simulated.max())] - time[0]
     return perc2_time[0]
 
 def following_error(reference, simulated):
