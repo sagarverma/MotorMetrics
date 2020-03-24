@@ -34,8 +34,7 @@ def response_time_95perc(reference, simulated, time):
 
 def following_error(reference, simulated):
     #error between refernece and simulated when reference is 0.5 of of the nominal
-    start, end = get_ramp(simulated)
-    following_indx = start + np.argmax(simulated >= 0.5 * (simulated.max()-simulated.min()))
+    following_indx = np.argmax(simulated >= 0.5 * (simulated.max()-simulated.min()))
     following_err = reference[following_indx] - simulated[following_indx]
     return following_err[0]
 

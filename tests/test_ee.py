@@ -76,3 +76,25 @@ def test__response_time_95perc():
     perc95_time = response_time_95perc(ref_speed_scope, sim_speed_scope, sim_time_scope)
 
     assert abs(perc95_time - 0.5) <= 0.000001
+
+def test__following_error():
+    data = sio.loadmat('tests/test1.mat')
+
+    ref_speed_inp = data['RefSpeedInp'][0]
+    ref_speed_inp_t = data['RefSpeedInp_t'][0]
+
+    ref_speed = data['RefSpeed']
+    sim_speed = data['Speed']
+
+    sim_time = data['SimTime']
+
+    ramp_scopes = get_ramps_from_raw_reference(ref_speed_inp, ref_speed_inp_t)
+    sim_ramp_scope = get_ramp_from_sim_reference(sim_time, ramp_scopes[0])
+
+    ref_speed_scope = ref_speed[sim_ramp_scope[1]: sim_ramp_scope[-1]]
+    sim_speed_scope = sim_speed[sim_ramp_scope[1]: sim_ramp_scope[-1]]
+    sim_time_scope = sim_time[sim_ramp_scope[1]: sim_ramp_scope[-1]]
+
+    following_err = following_error(ref_speed_scope, sim_speed_scope)
+
+    assert abs(following_err - 1.253529) <= 0.000001
