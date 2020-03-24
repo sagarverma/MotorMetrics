@@ -25,18 +25,18 @@ def get_ramp_from_sim_reference(sim_time, ramp_scope):
 def response_time_2perc(reference, simulated, time):
     #when is the simulated quantity 2% of the nominal reference quantity.
     perc2_time = time[np.argmax(reference >= 0.02 * simulated.max())] - time[0]
-    return perc2_time[0]
+    return perc2_time
 
 def response_time_95perc(reference, simulated, time):
     #when is the simulated quantity 95% of the nominal reference quantity
     perc2_time = time[np.argmax(reference >= 0.95 * simulated.max())] - time[0]
-    return perc2_time[0]
+    return perc2_time
 
 def following_error(reference, simulated):
     #error between refernece and simulated when reference is 0.5 of of the nominal
     following_indx = np.argmax(simulated >= 0.5 * (simulated.max()-simulated.min()))
     following_err = reference[following_indx] - simulated[following_indx]
-    return following_err[0]
+    return following_err
 
 def stead_state_error(reference, simulated):
     #error between reference and simulated when simulated has stablised after overshoot
