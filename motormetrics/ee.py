@@ -32,11 +32,12 @@ def response_time_95perc(reference, simulated, time):
     perc2_time = time[np.argmax(reference >= 0.95 * simulated.max())] - time[0]
     return perc2_time
 
-def following_error(reference, simulated):
+def following_error(reference, simulated, time):
     #error between refernece and simulated when reference is 0.5 of of the nominal
     following_indx = np.argmax(simulated >= 0.5 * (simulated.max()-simulated.min()))
     following_err = reference[following_indx] - simulated[following_indx]
-    return following_err
+    following_time = time[following_indx]
+    return following_err, following_time[0]
 
 def stead_state_error(reference, simulated):
     #error between reference and simulated when simulated has stablised after overshoot
@@ -44,13 +45,14 @@ def stead_state_error(reference, simulated):
     #average - reference is steady state error
     pass
 
-def overshoot(reference, simulated):
+def overshoot(reference, simulated, time):
     #value of simulated at ramp overshoot
     #negative if undershoot, positive if overshoot
     start, end = get_ramp(simulated)
     overshoot_idx = end + np.argmax(abs(reference[end:-1] - simulated[end:-1]))
     overshoot_perc = 100 * (simulated[overshoot_idx] - reference[overshoot_idx]) / (simulated.max() - simulated.min())
-    return overshoot_perc[0]
+    overshoot_time = time[overshoot_idx]
+    return overshoot_perc, overshoot_time[0]
 
 def max_torque_acceleration(simulated):
     #maximum value of torque when speed ramp occurs

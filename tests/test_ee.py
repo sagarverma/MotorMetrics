@@ -95,6 +95,7 @@ def test__following_error():
     sim_speed_scope = sim_speed[sim_ramp_scope[1]: sim_ramp_scope[-1]]
     sim_time_scope = sim_time[sim_ramp_scope[1]: sim_ramp_scope[-1]]
 
-    following_err = following_error(ref_speed_scope, sim_speed_scope)
+    following_err, following_time = following_error(ref_speed_scope, sim_speed_scope, sim_time)
 
     assert abs(following_err - 1.253529) <= 0.000001
+    assert abs(following_time - 0.3) <= 0.000000001
