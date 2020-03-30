@@ -19,7 +19,7 @@ def get_ramps_from_raw_reference(reference_data, reference_time):
     return ramp_scopes
 
 def get_ramp_from_sim_reference(sim_time, ramp_scope):
-    sim_ramp_scope = [(np.abs(sim_time - x)).argmin() for x in ramp_scope]
+    sim_ramp_scope = [np.where(sim_time == x)[0][0] for x in ramp_scope]
     return sim_ramp_scope
 
 def response_time_2perc(reference, simulated, time):
