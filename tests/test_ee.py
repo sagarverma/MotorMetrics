@@ -99,3 +99,27 @@ def test__following_error():
 
     assert abs(following_err - 1.253529) <= 0.000001
     assert abs(following_time - 0.3) <= 0.000000001
+
+
+def test__overshoot():
+    data = sio.loadmat('tests/test1.mat')
+
+    ref_speed_inp = data['RefSpeedInp'][0]
+    ref_speed_inp_t = data['RefSpeedInp_t'][0]
+
+    ref_speed = data['RefSpeed']
+    sim_speed = data['Speed']
+
+    sim_time = data['SimTime']
+
+    ramp_scopes = get_ramps_from_raw_reference(ref_speed_inp, ref_speed_inp_t)
+    sim_ramp_scope = get_ramp_from_sim_reference(sim_time, ramp_scopes[0])
+
+    ref_speed_scope = ref_speed[sim_ramp_scope[1]: sim_ramp_scope[-1]]
+    sim_speed_scope = sim_speed[sim_ramp_scope[1]: sim_ramp_scope[-1]]
+    sim_time_scope = sim_time[sim_ramp_scope[1]: sim_ramp_scope[-1]]
+
+    overshoot_err, overshoot_time = overshoot(ref_speed_scope, sim_speed_scope, sim_time)
+
+    assert abs(overshoot_err - -4.71584292) <= 0.000001
+    assert abs(overshoot_time - 0.05) <= 0.000000001
