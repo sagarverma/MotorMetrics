@@ -75,7 +75,7 @@ def test__response_time_95perc():
 
     perc95_time = response_time_95perc(ref_speed_scope, sim_speed_scope, sim_time_scope)
 
-    assert abs(perc95_time - 1.5) <= 0.000001
+    assert abs(perc95_time - 1.45) <= 0.000001
 
 def test__following_error():
     data = sio.loadmat('tests/test1.mat')
@@ -95,10 +95,10 @@ def test__following_error():
     sim_speed_scope = sim_speed[sim_ramp_scope[0]: sim_ramp_scope[-1] + 1]
     sim_time_scope = sim_time[sim_ramp_scope[0]: sim_ramp_scope[-1] + 1]
 
-    following_err, following_time = following_error(ref_speed_scope, sim_speed_scope, sim_time)
+    following_err, following_time = following_error(ref_speed_scope, sim_speed_scope, sim_time_scope)
 
-    assert abs(following_err - 1.25352951) <= 0.000001
-    assert abs(following_time - 1.3) <= 0.000000001
+    assert abs(following_err - 2.46235934) <= 0.000001
+    assert abs(following_time - 1.25) <= 0.000000001
 
 
 def test__overshoot():
@@ -115,11 +115,13 @@ def test__overshoot():
     ramp_scopes = get_ramps_from_raw_reference(ref_speed_inp, ref_speed_inp_t)
     sim_ramp_scope = get_ramp_from_sim_reference(sim_time, ramp_scopes[0])
 
-    ref_speed_scope = ref_speed[sim_ramp_scope[0]: sim_ramp_scope[-1] + 1]
-    sim_speed_scope = sim_speed[sim_ramp_scope[0]: sim_ramp_scope[-1] + 1]
-    sim_time_scope = sim_time[sim_ramp_scope[0]: sim_ramp_scope[-1] + 1]
+    ref_speed_scope = ref_speed[sim_ramp_scope[2]: sim_ramp_scope[-1] + 1]
+    sim_speed_scope = sim_speed[sim_ramp_scope[2]: sim_ramp_scope[-1] + 1]
+    sim_time_scope = sim_time[sim_ramp_scope[2]: sim_ramp_scope[-1] + 1]
+    minn = ref_speed[sim_ramp_scope[0]: sim_ramp_scope[-1] + 1].min()
+    maxx = ref_speed[sim_ramp_scope[0]: sim_ramp_scope[-1] + 1].max()
+    overshoot_err, overshoot_time = overshoot(ref_speed_scope, sim_speed_scope,
+                                    minn, maxx, sim_time_scope)
 
-    overshoot_err, overshoot_time = overshoot(ref_speed_scope, sim_speed_scope, sim_time)
-
-    assert abs(overshoot_err - -4.71584292) <= 0.000001
-    assert abs(overshoot_time - 1.05) <= 0.000000001
+    assert abs(overshoot_err - 104.40504014) <= 0.000001
+    assert abs(overshoot_time - 1.6) <= 0.000000001
