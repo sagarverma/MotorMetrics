@@ -3,6 +3,12 @@ import pytest
 import numpy as np
 import scipy.io as sio
 
+from motorrefgen.config import ExperimentConfig
+from motorrefgen.experiment import Experiment
+
+from motorsim.simconfig import SimConfig
+from motorsim.simulators.conn_python import Py2Mat
+
 from motormetrics.ee import *
 
 def test__get_ramps_from_raw_reference():
@@ -173,3 +179,36 @@ def test__max_torque_acceleration():
 
     assert abs(max_trq_acc - 16.343483203104014) <= 0.000001
     assert abs(max_trq_acc_time - 1.1) <= 0.000000001
+
+def test__compute_metrics():
+    config = ExperimentConfig()
+    experiment = Experiment(config=config)
+    simconfig = SimConfig()
+    simconfig.set_config_from_json({'Data_Ts': 0.001})
+    simulator = Py2Mat(simconfig)
+
+    reference = {'reference_speed': [0,0,50,50],
+                 'speed_time': [0,1,2,3],
+                 'reference_torque': [0,0,0,0],
+                 'torque_time': [0,1,2,3]}
+
+    experiment.set_manual_reference(reference)
+    experiment.simulate(simulator)
+
+    metrics = compute_metrics(experiment)
+
+    assert 'perc2_times' in metrics
+    assert 'perc95_times' in metrics
+    assert 'following_errs' in metrics
+    assert 'following_times' in metrics
+    assert 'overshoot_errs' in metrics
+    assert 'overshoot_times' in metrics
+    assert 'ramp_start_times' in metrics
+    assert 'sse_errs' in metrics
+    assert 'sse_times' in metrics
+    assert 'max_trq_accs' in metrics
+    assert 'max_trq_acc_times' in metrics
+
+    assert len(metrics['perc2_times']) == 1
+    assert metrics['perc2_times'][0] == 0.045
+    assert metrics['perc95_times'][0] == 0.96
