@@ -145,7 +145,7 @@ def test__stead_state_error():
     sim_time_scope = sim_time[sim_ramp_scope[2]: sim_ramp_scope[-1] + 1]
     minn = ref_speed[sim_ramp_scope[0]: sim_ramp_scope[-1] + 1].min()
     maxx = ref_speed[sim_ramp_scope[0]: sim_ramp_scope[-1] + 1].max()
-    sse_err, sse_time = stead_state_error(ref_speed_scope, sim_speed_scope,
+    sse_err, sse_time = steady_state_error(ref_speed_scope, sim_speed_scope,
                                             minn, maxx, sim_time_scope)
 
     assert abs(sse_err - 0.57655071) <= 0.000001

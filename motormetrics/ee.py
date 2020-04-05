@@ -48,7 +48,7 @@ def following_error(reference, simulated, time):
     following_time = time[following_indx]
     return following_err, following_time
 
-def stead_state_error(reference, simulated, minn, maxx, time):
+def steady_state_error(reference, simulated, minn, maxx, time):
     #error between reference and simulated when simulated has stablised after overshoot
     #consider last N points, they should be similar within a range and if they are take their average.
     #average - reference is steady state error
