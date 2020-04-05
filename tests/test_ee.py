@@ -123,5 +123,53 @@ def test__overshoot():
     overshoot_err, overshoot_time = overshoot(ref_speed_scope, sim_speed_scope,
                                     minn, maxx, sim_time_scope)
 
-    assert abs(overshoot_err - 104.40504014) <= 0.000001
+    assert abs(overshoot_err - 4.40504014) <= 0.000001
     assert abs(overshoot_time - 1.6) <= 0.000000001
+
+def test__stead_state_error():
+    data = sio.loadmat('tests/test1.mat')
+
+    ref_speed_inp = data['RefSpeedInp'][0]
+    ref_speed_inp_t = data['RefSpeedInp_t'][0]
+
+    ref_speed = data['RefSpeed']
+    sim_speed = data['Speed']
+
+    sim_time = data['SimTime']
+
+    ramp_scopes = get_ramps_from_raw_reference(ref_speed_inp, ref_speed_inp_t)
+    sim_ramp_scope = get_ramp_from_sim_reference(sim_time, ramp_scopes[0])
+
+    ref_speed_scope = ref_speed[sim_ramp_scope[2]: sim_ramp_scope[-1] + 1]
+    sim_speed_scope = sim_speed[sim_ramp_scope[2]: sim_ramp_scope[-1] + 1]
+    sim_time_scope = sim_time[sim_ramp_scope[2]: sim_ramp_scope[-1] + 1]
+    minn = ref_speed[sim_ramp_scope[0]: sim_ramp_scope[-1] + 1].min()
+    maxx = ref_speed[sim_ramp_scope[0]: sim_ramp_scope[-1] + 1].max()
+    sse_err, sse_time = stead_state_error(ref_speed_scope, sim_speed_scope,
+                                            minn, maxx, sim_time_scope)
+
+    assert abs(sse_err - 0.57655071) <= 0.000001
+    assert abs(sse_time - 2) <= 0.000000001
+
+def test__max_torque_acceleration():
+    data = sio.loadmat('tests/test1.mat')
+
+    ref_speed_inp = data['RefSpeedInp'][0]
+    ref_speed_inp_t = data['RefSpeedInp_t'][0]
+
+    ref_speed = data['RefSpeed']
+    sim_speed = data['Speed']
+    sim_torque = data['Torque']
+
+    sim_time = data['SimTime']
+
+    ramp_scopes = get_ramps_from_raw_reference(ref_speed_inp, ref_speed_inp_t)
+    sim_ramp_scope = get_ramp_from_sim_reference(sim_time, ramp_scopes[0])
+
+    sim_torque_scope = sim_torque[sim_ramp_scope[0]: sim_ramp_scope[-1] + 1]
+    sim_time_scope = sim_time[sim_ramp_scope[0]: sim_ramp_scope[-1] + 1]
+
+    max_trq_acc, max_trq_acc_time = max_torque_acceleration(sim_torque_scope, sim_time_scope)
+
+    assert abs(max_trq_acc - 16.343483203104014) <= 0.000001
+    assert abs(max_trq_acc_time - 1.1) <= 0.000000001

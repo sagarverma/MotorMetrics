@@ -24,7 +24,7 @@ def get_ramp_from_sim_reference(sim_time, ramp_scope):
 
 def response_time_2perc(reference, simulated, time):
     #when is the simulated quantity 2% of the nominal reference quantity.
-    perc2_time = time[np.argmax(simulated >= 0.02 * reference.max())] - time[0]
+    perc2_time = time[np.argmax(simulated >= 0.02 * reference.max())]
     return perc2_time
 
 def response_time_95perc(reference, simulated, time):
@@ -48,11 +48,12 @@ def following_error(reference, simulated, time):
     following_time = time[following_indx]
     return following_err, following_time
 
-def stead_state_error(reference, simulated):
+def stead_state_error(reference, simulated, minn, maxx, time):
     #error between reference and simulated when simulated has stablised after overshoot
     #consider last N points, they should be similar within a range and if they are take their average.
     #average - reference is steady state error
-    pass
+    sse_err = 100 * (reference[-1] - simulated[-1]) / (minn - maxx)
+    return sse_err, time[-1]
 
 def overshoot(reference, simulated, minn, maxx, time):
     #value of simulated at ramp overshoot
@@ -62,9 +63,9 @@ def overshoot(reference, simulated, minn, maxx, time):
     overshoot_time = time[overshoot_idx]
     return overshoot_perc, overshoot_time
 
-def max_torque_acceleration(simulated):
+def max_torque_acceleration(simulated, time):
     #maximum value of torque when speed ramp occurs
-    return np.max(simulated)
+    return np.max(abs(simulated)), time[np.argmax(abs(simulated))]
 
 def speed_drop(reference, simulated):
     #minimum value of speed when torque ramp occurs
