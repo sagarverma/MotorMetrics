@@ -48,11 +48,11 @@ def following_error(reference, simulated, time):
     following_time = time[following_indx]
     return following_err, following_time
 
-def steady_state_error(reference, simulated, minn, maxx, time):
+def steady_state_error(reference, simulated, time):
     #error between reference and simulated when simulated has stablised after overshoot
     #consider last N points, they should be similar within a range and if they are take their average.
     #average - reference is steady state error
-    sse_err = 100 * (reference[-1] - simulated[-1]) / (minn - maxx)
+    sse_err = reference[-1] - simulated[-1]
     return sse_err, time[-1]
 
 def overshoot(reference, simulated, minn, maxx, time):
@@ -149,7 +149,7 @@ def compute_metrics(experiment):
         overshoot_times.append(round(overshoot_time, 5))
 
         sse_err, sse_time = steady_state_error(ref_speed_scope, sim_speed_scope,
-                                                minn, maxx, sim_time_scope)
+                                                sim_time_scope)
 
         sse_errs.append(round(sse_err, 4))
         sse_times.append(round(sse_time, 5))
