@@ -4,6 +4,7 @@ import numpy as np
 
 from motormetrics.ml import *
 
+
 def test__flatten_extra_dims():
     arr = np.zeros((100,3))
     assert flatten_extra_dims(arr).shape == (300,)

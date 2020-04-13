@@ -6,6 +6,7 @@ from sklearn.metrics import r2_score, mean_absolute_error
 from sklearn.metrics import mean_squared_log_error
 
 
+
 def flatten_extra_dims(quant):
     r"""
     Flatten array with dimensions more than 1
