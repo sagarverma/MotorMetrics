@@ -8,6 +8,7 @@ pip install -e .
 ```
 
 ### Run tests
+Pytest depends on [MotorRefGen](https://github.com/sagarverma/MotorRefGen) and [MotorSim](https://github.com/sagarverma/MotorSim) libraries.
 ```
 pytest
 ```
