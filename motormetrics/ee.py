@@ -58,8 +58,8 @@ def steady_state_error(reference, simulated, time):
 def overshoot(reference, simulated, minn, maxx, time):
     #value of simulated at ramp overshoot
     #negative if undershoot, positive if overshoot
-    overshoot_idx = np.argmax(abs(reference - simulated))
-    overshoot_perc = 100 * (reference[overshoot_idx] - simulated[overshoot_idx]) / (minn - maxx)
+    overshoot_idx = np.argmax(abs(simulated))
+    overshoot_perc = 100 * (simulated[overshoot_idx] - reference[overshoot_idx]) / (maxx - minn)
     overshoot_time = time[overshoot_idx]
     return overshoot_perc, overshoot_time
 
