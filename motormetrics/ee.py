@@ -67,9 +67,9 @@ def max_torque_acceleration(simulated, time):
     #maximum value of torque when speed ramp occurs
     return np.max(abs(simulated)), time[np.argmax(abs(simulated))]
 
-def speed_drop(reference, simulated):
+def speed_drop(reference, simulated, time):
     #minimum value of speed when torque ramp occurs
-    pass
+    return np.max(abs(simulated - reference)), time[np.argmax(abs(simulated -reference))]
 
 def setting_time(reference, simulated):
     #When simulated speed value is back to 0.005 of reference speed value
@@ -107,6 +107,7 @@ def compute_metrics(experiment):
     max_trq_accs = []
     max_trq_acc_times = []
 
+    print (len(ramp_scopes))
     for ramp_scope in ramp_scopes:
         sim_ramp_scope = get_ramp_from_sim_reference(sim_time, ramp_scope)
 
