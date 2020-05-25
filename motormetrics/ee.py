@@ -63,9 +63,9 @@ def overshoot(reference, simulated, minn, maxx, time):
     overshoot_time = time[overshoot_idx]
     return overshoot_perc, overshoot_time
 
-def max_torque_acceleration(simulated, time):
+def max_torque_acceleration(reference, simulated, time):
     #maximum value of torque when speed ramp occurs
-    return np.max(abs(simulated)), time[np.argmax(abs(simulated))]
+    return np.max(abs(reference - simulated)), time[np.argmax(abs(reference - simulated))]
 
 def speed_drop(reference, simulated, time):
     #minimum value of speed when torque ramp occurs
