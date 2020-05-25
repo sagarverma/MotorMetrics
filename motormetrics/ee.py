@@ -79,7 +79,7 @@ def speed_drop_area(reference, simulated):
     #area of speed when drop occurs
     pass
 
-def compute_torque_metrics(experiment):
+def compute_speed_metrics(experiment):
     ref_speed = experiment.reference_speed
     ref_torque = experiment.reference_torque
     ref_speed_t = experiment.speed_time
@@ -93,7 +93,7 @@ def compute_torque_metrics(experiment):
 
     sim_time = experiment.time
 
-    ramp_scopes = get_ramps_from_raw_reference(ref_torque, ref_torque_t)
+    ramp_scopes = get_ramps_from_raw_reference(ref_speed, ref_speed_t)
 
     ramp_start_times = []
     perc2_times = []
@@ -107,7 +107,6 @@ def compute_torque_metrics(experiment):
     max_trq_accs = []
     max_trq_acc_times = []
 
-    print (len(ramp_scopes))
     for ramp_scope in ramp_scopes:
         sim_ramp_scope = get_ramp_from_sim_reference(sim_time, ramp_scope)
 
@@ -155,11 +154,13 @@ def compute_torque_metrics(experiment):
         sse_errs.append(round(sse_err, 4))
         sse_times.append(round(sse_time, 5))
 
+        ref_torque_scope = ref_torque_interp[sim_ramp_scope[0]: sim_ramp_scope[-1] + 1]
         sim_torque_scope = sim_torque[sim_ramp_scope[0]: sim_ramp_scope[-1] + 1]
         sim_time_scope = sim_time[sim_ramp_scope[0]: sim_ramp_scope[-1] + 1]
 
-        max_trq_acc, max_trq_acc_time = max_torque_acceleration(sim_torque_scope,
-                                        sim_time_scope)
+        max_trq_acc, max_trq_acc_time = max_torque_acceleration(ref_torque_scope,
+                                            sim_torque_scope,
+                                            sim_time_scope)
 
         max_trq_accs.append(round(max_trq_acc, 4))
         max_trq_acc_times.append(round(max_trq_acc_time, 5))
@@ -176,7 +177,7 @@ def compute_torque_metrics(experiment):
             'max_trq_accs': max_trq_accs,
             'max_trq_acc_times': max_trq_acc_times}
 
-def compute_speed_metrics(experiment):
+def compute_torque_metrics(experiment):
     ref_speed = experiment.reference_speed
     ref_torque = experiment.reference_torque
     ref_speed_t = experiment.speed_time
@@ -190,7 +191,7 @@ def compute_speed_metrics(experiment):
 
     sim_time = experiment.time
 
-    ramp_scopes = get_ramps_from_raw_reference(ref_speed, ref_speed_t)
+    ramp_scopes = get_ramps_from_raw_reference(ref_torque, ref_torque_t)
 
     ramp_start_times = []
     perc2_times = []
@@ -204,7 +205,6 @@ def compute_speed_metrics(experiment):
     speed_drops = []
     speed_drops_times = []
 
-    print (len(ramp_scopes))
     for ramp_scope in ramp_scopes:
         sim_ramp_scope = get_ramp_from_sim_reference(sim_time, ramp_scope)
 
@@ -252,10 +252,12 @@ def compute_speed_metrics(experiment):
         sse_errs.append(round(sse_err, 4))
         sse_times.append(round(sse_time, 5))
 
+        ref_speed_scope = ref_speed_interp[sim_ramp_scope[0]: sim_ramp_scope[-1] + 1]
         sim_speed_scope = sim_speed[sim_ramp_scope[0]: sim_ramp_scope[-1] + 1]
         sim_time_scope = sim_time[sim_ramp_scope[0]: sim_ramp_scope[-1] + 1]
 
-        spd_drp, spd_drp_time = speed_drop(sim_speed_scope,
+        spd_drp, spd_drp_time = speed_drop(ref_speed_scope,
+                                        sim_speed_scope,
                                         sim_time_scope)
 
         speed_drops.append(round(spd_drp, 4))
