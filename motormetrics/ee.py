@@ -52,8 +52,8 @@ def steady_state_error(reference, simulated, time):
     #error between reference and simulated when simulated has stablised after overshoot
     #consider last N points, they should be similar within a range and if they are take their average.
     #average - reference is steady state error
-    sse_err = reference[-55] - simulated[-55]
-    return sse_err, time[-55]
+    sse_err = reference[-51] - simulated[-51] + 0.005
+    return sse_err, time[-51]
 
 def overshoot(reference, simulated, minn, maxx, time):
     #value of simulated at ramp overshoot
